@@ -1,5 +1,7 @@
 import asyncio
 from asyncio import WindowsSelectorEventLoopPolicy
+from random import randrange
+
 from aioconsole import ainput
 
 import zmq
@@ -10,34 +12,26 @@ context = Context()
 
 
 async def work(name, port):
-    socket = context.socket(zmq.REP)
+    socket = context.socket(zmq.PUB)
     socket.bind(f"tcp://*:{port}")
     print(f"{name} listening on port {port}")
     try:
         while True:
-            message = await socket.recv_string()
-            print(f"{name} received: {message}")
-            await asyncio.sleep(0.1)
-            await socket.send_string(message)
+            zipcode = randrange(1000, 10000)
+            temperature = randrange(-30, 40)
+            humidity = randrange(10, 100)
+            await socket.send_string(f"{zipcode} {temperature} {humidity}")
+            await asyncio.sleep(0)
     except asyncio.CancelledError:
         print(f"{name} stopping")
         socket.close()
 
 
-async def main1(name, port):
+async def main(name, port):
     task = asyncio.create_task(work(name, port))
     await ainput()
     task.cancel()
 
 
-async def main2(name, port):
-    tasks = [
-        asyncio.create_task(work(f"{name}-{i}", port + i)) for i in range(3)
-    ]
-    await ainput()
-    for t in tasks:
-        t.cancel()
-
-
 if __name__ == "__main__":
-    asyncio.run(main2("server", 5555))
+    asyncio.run(main("weather update server", 5555))
