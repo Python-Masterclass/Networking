@@ -12,6 +12,7 @@ context = Context()
 
 async def main():
     socket = context.socket(zmq.REQ)
+    socket.identity = b"client"
     with socket.connect("tcp://localhost:25000"):
         while True:
             input_string = await ainput("> ")

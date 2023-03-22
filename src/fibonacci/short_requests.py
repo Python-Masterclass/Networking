@@ -11,17 +11,6 @@ asyncio.set_event_loop_policy(WindowsSelectorEventLoopPolicy())
 context = Context()
 
 
-async def work():
-    socket = context.socket(zmq.REQ)
-    with socket.connect("tcp://localhost:25000"):
-        while True:
-            start = time.time()
-            await socket.send_string("30")
-            response = await socket.recv_string()
-            end = time.time()
-            print(f"{response} ({end - start} seconds)")
-
-
 count = 0
 
 
@@ -36,6 +25,7 @@ async def monitor():
 async def work():
     global count
     socket = context.socket(zmq.REQ)
+    socket.identity = b"short_requests"
     with socket.connect("tcp://localhost:25000"):
         while True:
             await socket.send_string("1")

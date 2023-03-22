@@ -13,6 +13,7 @@ context = Context()
 
 async def work():
     socket = context.socket(zmq.REQ)
+    socket.identity = b"long_requests"
     with socket.connect("tcp://localhost:25000"):
         while True:
             start = time.time()

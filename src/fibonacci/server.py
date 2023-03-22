@@ -72,18 +72,18 @@ async def worker(worker_addr, name):
     print(f"{name} connecting to {worker_addr}")
     try:
         with socket.connect(worker_addr):
+            message = "ready"
             print(f"{name} ready")
-            await socket.send_string("Ready")
             while True:
+                await socket.send_string(message)
                 job = await socket.recv_string()
                 print(f"{name} received {job=}")
                 n = int(job)
                 result = await fib(n)
-                await socket.send_string(f"{result}")
+                message = f"{result}"
     except asyncio.CancelledError:
         print(f"{name} cancelled")
         socket.close()
-
 
 
 async def main(server_addr):
