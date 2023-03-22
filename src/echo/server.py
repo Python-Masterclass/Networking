@@ -16,9 +16,9 @@ async def work(name, port):
     try:
         while True:
             message = await socket.recv_string()
-            print(f"{name} received: {message}")
-            await asyncio.sleep(0.1)
-            await socket.send_string(message)
+            print(f"{name} received '{message}'")
+            await socket.send_string(f"{name}: {message}")
+            print(f"{name} sent '{name}: {message}'")
     except asyncio.CancelledError:
         print(f"{name} stopping")
         socket.close()
@@ -40,4 +40,4 @@ async def main2(name, port):
 
 
 if __name__ == "__main__":
-    asyncio.run(main2("server", 5555))
+    asyncio.run(main2("echo", 5555))

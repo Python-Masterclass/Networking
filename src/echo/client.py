@@ -1,4 +1,5 @@
 import asyncio
+import random
 from asyncio import WindowsSelectorEventLoopPolicy
 
 
@@ -42,12 +43,21 @@ async def work_multi(name, port, count):
         await socket.send_string(f"{name}, message {i}")
         reply = await socket.recv_string()
         print(f"{name}: received reply '{reply}'")
-        await asyncio.sleep(0.2)
+        if name != f"{name}-0":
+            await asyncio.sleep(random.uniform(0.2, 0.3))
 
 
 async def main3(name, port):
     await work_multi(name, port, 3)
 
 
+async def main4(name, port):
+    tasks = [
+        work_multi(f"{name}-{i}", port, 3) for i in range(5)
+    ]
+    await asyncio.gather(*tasks)
+
+
+
 if __name__ == "__main__":
-    asyncio.run(main3("client", 5555))
+    asyncio.run(main4("client", 5555))
