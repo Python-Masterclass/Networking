@@ -24,7 +24,6 @@ async def work(name, port):
             await asyncio.sleep(0)
     except asyncio.CancelledError:
         print(f"{name} stopping")
-        socket.setsockopt
         socket.close()
 
 

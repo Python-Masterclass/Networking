@@ -66,4 +66,4 @@ async def main(n_workers):
 
 
 if __name__ == "__main__":
-    asyncio.run(main(10))
+    asyncio.run(main(50))

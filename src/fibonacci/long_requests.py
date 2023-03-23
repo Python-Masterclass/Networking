@@ -22,6 +22,7 @@ async def work():
             end = time.time()
             print(f"{response} ({end - start} seconds)")
 
+
 async def main():
     work_task = asyncio.create_task(work())
     await ainput()
